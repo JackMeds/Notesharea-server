@@ -9,13 +9,13 @@ const { formatUser } = require('./_format');
  * @param {string} userName 用户名
  * @param {string} password 密码
  */
-async function getUserInfo(userName, password) {
+async function getUserInfo({userName, password}) {
     //查询条件
     const whereOpt = {
-        userName
+        userName: userName
     };
     if (password) {
-        Object.assign(whereOpt, { password });
+        Object.assign(whereOpt, { password: password });
     }
 
     //查询
@@ -41,14 +41,14 @@ async function getUserInfo(userName, password) {
  * @param {number} gender 性别 (1 男， 2 女， 3 保密) 默认 3
  * @param {string} nickName 昵称
  */
-async function createUser({ userName, password, gender = 3,  nickName }){
+async function createUser(userName, password, gender = 3,  nickName){
     const result = await User.create({
-        userName,
-        password,
+        userName: userName,
+        password: password,
         nickName: nickName ? nickName : userName,
-        gender
+        gender: gender
     });
-    console.log(result);
+    // console.log(result.dataValues);
     return result.dataValues;
 }
 

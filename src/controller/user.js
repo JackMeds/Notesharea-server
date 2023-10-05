@@ -13,6 +13,7 @@ const doCrypto = require('../utils/cryp');
  */
 async function isExist(userName) {
     const userInfo = await getUserInfo(userName);
+    console.log(userInfo);
     if (userInfo) {
         //已存在
         //{ code: 0, data: {....} }
@@ -30,9 +31,10 @@ async function isExist(userName) {
  * @param {string} password 密码
  * @param {number} gender 性别 (1 男， 2 女， 3 保密) 默认 3
  */
-async function register({ userName, password, gender}){
-    const userInfo = await getUserInfo(userName);
-    if(userInfo){
+async function register({ userName, password, gender }) {
+    const userInfo = await getUserInfo({ userName });
+    console.log(userInfo);
+    if (userInfo) {
         //用户名已存在
         return new ErrorModel(registerUserNameExistInfo);
     }
@@ -44,8 +46,8 @@ async function register({ userName, password, gender}){
             password: doCrypto(password),
             gender
         });
-        return new SuccessModel();   
-    }catch(ex){
+        return new SuccessModel();
+    } catch (ex) {
         console.error(ex.message, ex.stack);
         return new ErrorModel(registerFailInfo);
     }
