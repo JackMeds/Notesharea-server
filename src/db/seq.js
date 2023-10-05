@@ -9,6 +9,7 @@ const { host, user, password, database } = MYSQL_CONF;
 const conf = {
     host,
     dialect: 'mysql',
+    timezone: '+08:00' //东八时区
 }
 
 if (isTest) {

@@ -12,7 +12,13 @@ seq.authenticate().then(() => {
     console.log(err);
 })
 
-// 执行同步
+// // 执行同步但删除原有表
+// seq.sync({ force: true }).then(() => {
+//     console.log('sync ok');
+//     process.exit();
+// });
+
+//执行同步但不删除原有表
 seq.sync().then(() => {
     console.log('sync ok');
     process.exit();
