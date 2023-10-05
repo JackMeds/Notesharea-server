@@ -2,7 +2,7 @@
  * @description user controller
  */
 
-const { getUserInfo } = require('../service/user');
+const { getUserInfo } = require('../services/user');
 const { SuccessModel, ErrorModel } = require('../model/ResModel');
 const { registerUserNameNotExistInfo, registerUserNameExistInfo, registerFailInfo } = require('../model/ErrorInfo');
 const doCrypto = require('../utils/cryp');
