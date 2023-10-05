@@ -12,8 +12,9 @@ const doCrypto = require('../utils/cryp');
  * @param {string} userName 用户名
  */
 async function isExist(userName) {
-    const userInfo = await getUserInfo(userName);
-    console.log(userInfo);
+    // console.log("controller"+userName);
+    const userInfo = await getUserInfo({userName});
+    // console.log(userInfo);
     if (userInfo) {
         //已存在
         //{ code: 0, data: {....} }
@@ -32,7 +33,7 @@ async function isExist(userName) {
  * @param {number} gender 性别 (1 男， 2 女， 3 保密) 默认 3
  */
 async function register({ userName, password, gender }) {
-    const userInfo = await getUserInfo({ userName });
+    const userInfo = await getUserInfo(userName);
     console.log(userInfo);
     if (userInfo) {
         //用户名已存在
