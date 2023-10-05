@@ -10,12 +10,14 @@ const { formatUser } = require('./_format');
  * @param {string} password 密码
  */
 async function getUserInfo({userName, password}) {
+    // console.log("service"+userName);
+    // console.log("service"+password);
     //查询条件
     const whereOpt = {
-        userName: userName
+        userName
     };
     if (password) {
-        Object.assign(whereOpt, { password: password });
+        Object.assign(whereOpt, { password });
     }
 
     //查询
