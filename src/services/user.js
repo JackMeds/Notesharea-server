@@ -1,0 +1,64 @@
+/**
+ * @description user service
+ */
+
+const { User } = require('../db/model/index');
+const { formatUser } = require('./_format');
+/**
+ * 
+ * @param {string} userName 用户名
+ * @param {string} password 密码
+ */
+async function getUserInfo(userName, password) {
+    //查询条件
+    const whereOpt = {
+        userName
+    };
+    if (password) {
+        Object.assign(whereOpt, { password });
+    }
+
+    //查询
+    const result = await User.findOne({
+        attributes: ['id', 'userName', 'nickName', 'picture', 'gender', 'email', 'phoneNum', 'userIntro'],
+        where: whereOpt
+    });
+    if (result == null) {
+        //未找到
+        return result;
+    }
+
+    //格式化
+    const formatRes = formatUser(result.dataValues);
+
+    return formatRes;
+}
+
+/**
+ * 创建用户
+ * @param {string} userName 用户名
+ * @param {string} password 密码
+ * @param {number} gender 性别 (1 男， 2 女， 3 保密) 默认 3
+ * @param {string} nickName 昵称
+ */
+async function createUser({ userName, password, gender = 3,  nickName }){
+    // const result = await User.create({
+    //     userName,
+    //     password,
+    //     nickName: nickName ? nickName : userName,
+    //     gender
+    // });
+    const result = await User.create({
+        "userName": "hdy",
+        "password": "123456",
+        "nickName": "zhangsan",
+        "gender": 1,
+    });
+    console.log(result);
+    return result.dataValues;
+}
+
+module.exports = {
+    getUserInfo,
+    createUser
+}

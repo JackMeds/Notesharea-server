@@ -30,7 +30,7 @@ async function isExist(userName) {
  * @param {string} password 密码
  * @param {number} gender 性别 (1 男， 2 女， 3 保密) 默认 3
  */
-async function register({ userName, password, gender}){
+async function register({ userName, password, gender }){
     const userInfo = await getUserInfo(userName);
     if(userInfo){
         //用户名已存在
