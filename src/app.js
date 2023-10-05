@@ -9,9 +9,11 @@ const session = require('koa-generic-session')
 const redisStore = require('koa-redis')
 
 const { REDIS_CONF } = require('./conf/db')
+const { isProd } = require('./utils/env')
+const {SESSION_SECRET_KEY} = require('./conf/secretKeys')
 
 const index = require('./routes/index')
-// const users = require('./routes/users')
+// // const users = require('./routes/users')
 const userAPIRouter = require('./routes/api/user')
 
 // error handler
@@ -32,7 +34,7 @@ app.use(views(__dirname + '/views', {
 // debugger
 
 // session 配置
-app.keys = ['Notesharea_=#@2023']
+app.keys = [SESSION_SECRET_KEY]
 app.use(session({
   key: 'Notesharea.sid', // cookie name 默认是 koa.sid
   prefix: 'Notesharea:sess:', // redis key 的前缀，默认是 koa:sess:
@@ -57,7 +59,8 @@ app.use(session({
 
 // routes
 app.use(index.routes(), index.allowedMethods())
-// app.use(users.routes(), users.allowedMethods())
+app.use(users.routes(), users.allowedMethods())
+
 app.use(userAPIRouter.routes(), userAPIRouter.allowedMethods())
 
 // error-handling

@@ -37,25 +37,26 @@ async function getUserInfo(userName, password) {
     return formatRes;
 }
 
-//手动添加用户信息
-async function addUser(userName, password, nickName, picture, gender, email, phoneNum, userIntro){
-    //添加用户信息
-    await User.create({
-        "userName": userName,
-        "password": password,
-        "nickName": nickName,
-        "picture": picture,
-        "gender": gender,
-        "email": email,
-        "phoneNum": phoneNum,
-        "userIntro": userIntro
-    });
 
-    //查询用户信息
-    await getUserInfo(userName);
+/**
+ * 创建用户
+ * @param {string} userName 用户名
+ * @param {string} password 密码
+ * @param {number} gender 性别 (1 男， 2 女， 3 保密) 默认 3
+ * @param {string} nickName 昵称
+ */
+async function createUser({ userName, password, gender = 3,  nickName }){
+    const result = await User.create({
+        userName,
+        password,
+        nickName: nickName ? nickName : userName,
+        gender
+    });
+    console.log(result);
+    return result.dataValues;
 }
 
 module.exports = {
     getUserInfo,
-    addUser
+    createUser
 }
