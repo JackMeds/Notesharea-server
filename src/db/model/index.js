@@ -8,6 +8,8 @@ const Collect = require('./Collect');
 const Comment = require('./Comment');
 const Like = require('./Like');
 const Reply = require('./Reply');
+const Administrator = require('./Administrator');
+const recommendNote = require('./recommendNote');
 
 // 外键关联
 // 一个用户可以有多个笔记
@@ -87,6 +89,23 @@ User.hasMany(Like, {
 Like.belongsTo(User, {
     foreignKey: 'userId'
 });
+// 一个管理员用户可以有多个推荐
+// Administrator.hasMany(recommendNote, {
+//     foreignKey: 'adminId'
+// });
+
+// 一个推荐只能属于一个管理员用户
+// recommendNote.belongsTo(Administrator, {
+//     foreignKey: 'adminId'
+// });
+// 一个笔记可以有多个推荐
+Note.hasMany(recommendNote, {
+    foreignKey: 'noteId'
+});
+// 一个推荐只能属于一个笔记
+recommendNote.belongsTo(Note, {
+    foreignKey: 'noteId'
+});
 
 
 module.exports = {
@@ -95,5 +114,7 @@ module.exports = {
     Collect,
     Comment,
     Like,
-    Reply
+    Reply,
+    Administrator,
+    recommendNote
 }
