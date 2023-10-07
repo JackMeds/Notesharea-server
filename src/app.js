@@ -7,10 +7,19 @@ const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const session = require('koa-generic-session')
 const redisStore = require('koa-redis')
+const cors = require('koa2-cors');
 
 const { REDIS_CONF } = require('./conf/db')
 const { isProd } = require('./utils/env')
 const {SESSION_SECRET_KEY} = require('./conf/secretKeys')
+
+// 配置 CORS 中间件
+app.use(cors({
+  origin: '*', // 允许任何来源的跨域请求，实际部署时建议设置为具体的域名
+  credentials: true, // 允许携带凭证信息（如 Cookies）
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE'], // 允许的 HTTP 请求方法
+  allowHeaders: ['Content-Type', 'Authorization'], // 允许的请求头
+}));
 
 const index = require('./routes/index')
 // // const users = require('./routes/users')
