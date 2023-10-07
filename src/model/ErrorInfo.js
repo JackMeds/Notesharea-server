@@ -20,7 +20,17 @@ module.exports = {
         code: 10003,
         message: '用户名未存在'
     },
-    
+    //登录失败
+    loginFailInfo: {
+        code: 10004,
+        message: '登录失败，用户名或密码错误'
+    },
+    //未登录
+    loginCheckFailInfo: {
+        code: 10005,
+        message: '您尚未登录'
+    },
+
     //json schema 校验失败
     jsonSchemaFileInfo:{
         errno:10009,

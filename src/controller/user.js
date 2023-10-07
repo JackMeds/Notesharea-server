@@ -4,14 +4,14 @@
 
 const { getUserInfo } = require('../services/user');
 const { SuccessModel, ErrorModel } = require('../model/ResModel');
-const { registerUserNameNotExistInfo, registerUserNameExistInfo, registerFailInfo } = require('../model/ErrorInfo');
+const { registerUserNameNotExistInfo, registerUserNameExistInfo, registerFailInfo, loginFailInfo } = require('../model/ErrorInfo');
 const doCrypto = require('../utils/cryp');
 
 /**
  * 
  * @param {string} userName 用户名
  */
-async function isExist(userName) {
+async function isExist({userName}) {
     // console.log("controller"+userName);
     const userInfo = await getUserInfo({userName});
     // console.log(userInfo);
@@ -55,7 +55,36 @@ async function register({ userName, password, gender }) {
 
 }
 
+/**
+ * 
+ * @param {Object} ctx koa2 ctx
+ * @param {string} userName 用户名 
+ * @param {string} password 密码
+ */
+async function login(ctx, userName, password) {
+    //登陆成功 ctx.session.userInfo = xxx
+    //获取用户信息
+    const loginMessage = {
+        userName, 
+        password: doCrypto(password)
+    }
+    console.log(loginMessage);
+    const userInfo = await getUserInfo(loginMessage);
+    if (!userInfo){
+        //登陆失败
+        console.log(userInfo);
+        return new ErrorModel(loginFailInfo);
+    }
+
+    //登陆成功
+    if (ctx.session.userInfo == null) {
+        ctx.session.userInfo = userInfo;
+    }
+    return new SuccessModel();
+}
+
 module.exports = {
     isExist,
-    register
+    register,
+    login
 }
