@@ -3,7 +3,7 @@
  */
 
 const router = require("koa-router")();
-const { isExist,register } = require("../../controller/user");
+const { isExist,register, login } = require("../../controller/user");
 const userValidate = require("../../validator/user");
 const { genValidator } = require("../../middlewares/validator");
 
@@ -32,30 +32,37 @@ router.post("/isExist", async (ctx, next) => {
   ctx.body = await isExist(userName);
 });
 
+//登录
+router.post("/login", async (ctx, next) => {
+  const {userName, password} = ctx.request.body;
+  ctx.body = await login(ctx, userName, password);  
+})
+
+
 //测试
-router.post("/test", async (ctx, next) => {
-  console.log(ctx.request.body);
-  const { username, password } = ctx.request.body;
-    let result = {
-        code: -1,
-        message: "登录失败",
-    };
-    function mytest(username, password){
-    if (username == "123456" && password == "123456") {
-      result = {
-        code: 0,
-        message: "登录成功",
-        data: {
-          username,
-          password,
-        }
-      };
-      return result;
-    } else {
-      return result;
-    }
-  };
-  ctx.body = await mytest(username, password);
-});
+// router.post("/test", async (ctx, next) => {
+//   console.log(ctx.request.body);
+//   const { username, password } = ctx.request.body;
+//     let result = {
+//         code: -1,
+//         message: "登录失败",
+//     };
+//     function mytest(username, password){
+//     if (username == "123456" && password == "123456") {
+//       result = {
+//         code: 0,
+//         message: "登录成功",
+//         data: {
+//           username,
+//           password,
+//         }
+//       };
+//       return result;
+//     } else {
+//       return result;
+//     }
+//   };
+//   ctx.body = await mytest(username, password);
+// });
 
 module.exports = router;
