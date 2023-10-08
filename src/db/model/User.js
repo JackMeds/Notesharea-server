@@ -3,7 +3,7 @@
  */
 
 const seq = require('../seq');
-const { STRING, DECIMAL } = require('../types');
+const { STRING, DECIMAL, TEXT } = require('../types');
 
 //users
 const User = seq.define('user', {
@@ -14,7 +14,7 @@ const User = seq.define('user', {
         comment: '用户名，唯一'
     },
     password: {
-        type: STRING,
+        type: TEXT,
         allowNull: false,
         comment: '密码'
     },
@@ -35,7 +35,7 @@ const User = seq.define('user', {
         comment: '邮箱'
     },
     picture: {
-        type: STRING,
+        type: TEXT,
         comment: '头像，图片地址'
     },
     phoneNum: {
