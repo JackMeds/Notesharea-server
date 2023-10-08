@@ -2,38 +2,48 @@
  * @description user service
  */
 
-const { User } = require('../db/model/index');
-const { formatUser } = require('./_format');
+const { User } = require("../db/model/index");
+const { formatUser } = require("./_format");
 /**
- * 
+ *
  * @param {string} userName 用户名
  * @param {string} password 密码
  */
-async function getUserInfo({userName, password}) {
-    // console.log("service"+userName);
-    // console.log("service"+password);
-    //查询条件
-    const whereOpt = {
-        userName
-    };
-    if (password) {
-        Object.assign(whereOpt, { password });
-    }
+async function getUserInfo({ userName, password }) {
+  console.log("service" + userName);
+  console.log("service" + password);
+  //查询条件
+  const whereOpt = {
+    userName,
+  };
+  if (password) {
+    Object.assign(whereOpt, { password });
+  }
 
-    //查询
-    const result = await User.findOne({
-        attributes: ['id', 'userName', 'nickName', 'picture', 'gender', 'email', 'phoneNum', 'userIntro'],
-        where: whereOpt
-    });
-    if (result == null) {
-        //未找到
-        return result;
-    }
+  //查询
+  const result = await User.findOne({
+    attributes: [
+      "id",
+      "userName",
+      "nickName",
+      "picture",
+      "gender",
+      "email",
+      "phoneNum",
+      "userIntro",
+      "picture",
+    ],
+    where: whereOpt,
+  });
+  if (result == null) {
+    //未找到
+    return result;
+  }
 
-    //格式化
-    const formatRes = formatUser(result.dataValues);
+  //格式化
+  const formatRes = formatUser(result.dataValues);
 
-    return formatRes;
+  return formatRes;
 }
 
 /**
@@ -43,18 +53,31 @@ async function getUserInfo({userName, password}) {
  * @param {number} gender 性别 (1 男， 2 女， 3 保密) 默认 3
  * @param {string} nickName 昵称
  */
-async function createUser(userName, password, gender = 3,  nickName){
-    const result = await User.create({
-        userName: userName,
-        password: password,
-        nickName: nickName ? nickName : userName,
-        gender: gender
-    });
-    // console.log(result.dataValues);
-    return result.dataValues;
+async function createUser({
+  userName,
+  password,
+  gender = 3,
+  nickName,
+  email,
+  phoneNum,
+  userIntro,
+  picture,
+}) {
+  const result = await User.create({
+    userName: userName,
+    password: password,
+    nickName: nickName ? nickName : userName,
+    gender: gender,
+    email: email,
+    phoneNum: phoneNum,
+    userIntro: userIntro,
+    picture,
+  });
+  // console.log(result.dataValues);
+  return result.dataValues;
 }
 
 module.exports = {
-    getUserInfo,
-    createUser
-}
+  getUserInfo,
+  createUser,
+};
