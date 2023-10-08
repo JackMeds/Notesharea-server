@@ -10,40 +10,40 @@ const { formatUser } = require("./_format");
  * @param {string} password 密码
  */
 async function getUserInfo({ userName, password }) {
-  console.log("service" + userName);
-  console.log("service" + password);
-  //查询条件
-  const whereOpt = {
-    userName,
-  };
-  if (password) {
-    Object.assign(whereOpt, { password });
-  }
+    console.log("service" + userName);
+    console.log("service" + password);
+    //查询条件
+    const whereOpt = {
+        userName,
+    };
+    if (password) {
+        Object.assign(whereOpt, { password });
+    }
 
-  //查询
-  const result = await User.findOne({
-    attributes: [
-      "id",
-      "userName",
-      "nickName",
-      "picture",
-      "gender",
-      "email",
-      "phoneNum",
-      "userIntro",
-      "picture",
-    ],
-    where: whereOpt,
-  });
-  if (result == null) {
-    //未找到
-    return result;
-  }
+    //查询
+    const result = await User.findOne({
+        attributes: [
+            "id",
+            "userName",
+            "nickName",
+            "picture",
+            "gender",
+            "email",
+            "phoneNum",
+            "userIntro",
+            "picture",
+        ],
+        where: whereOpt,
+    });
+    if (result == null) {
+        //未找到
+        return result;
+    }
 
-  //格式化
-  const formatRes = formatUser(result.dataValues);
+    //格式化
+    const formatRes = formatUser(result.dataValues);
 
-  return formatRes;
+    return formatRes;
 }
 
 /**
@@ -54,30 +54,30 @@ async function getUserInfo({ userName, password }) {
  * @param {string} nickName 昵称
  */
 async function createUser({
-  userName,
-  password,
-  gender = 3,
-  nickName,
-  email,
-  phoneNum,
-  userIntro,
-  picture,
-}) {
-  const result = await User.create({
-    userName: userName,
-    password: password,
-    nickName: nickName ? nickName : userName,
-    gender: gender,
-    email: email,
-    phoneNum: phoneNum,
-    userIntro: userIntro,
+    userName,
+    password,
+    gender = 3,
+    nickName,
+    email,
+    phoneNum,
+    userIntro,
     picture,
-  });
-  // console.log(result.dataValues);
-  return result.dataValues;
+}) {
+    const result = await User.create({
+        userName: userName,
+        password: password,
+        nickName: nickName ? nickName : userName,
+        gender: gender,
+        email: email,
+        phoneNum: phoneNum,
+        userIntro: userIntro,
+        picture,
+    });
+    // console.log(result.dataValues);
+    return result.dataValues;
 }
 
 module.exports = {
-  getUserInfo,
-  createUser,
+    getUserInfo,
+    createUser,
 };
