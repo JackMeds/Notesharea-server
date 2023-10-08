@@ -24,6 +24,7 @@ app.use(cors({
 const index = require('./routes/index')
 // // const users = require('./routes/users')
 const userAPIRouter = require('./routes/api/user')
+const noteAPIRouter = require('./routes/api/note')
 
 // error handler
 onerror(app)
@@ -68,9 +69,8 @@ app.use(session({
 
 // routes
 app.use(index.routes(), index.allowedMethods())
-// app.use(users.routes(), users.allowedMethods())
-
 app.use(userAPIRouter.routes(), userAPIRouter.allowedMethods())
+app.use(noteAPIRouter.routes(), noteAPIRouter.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {

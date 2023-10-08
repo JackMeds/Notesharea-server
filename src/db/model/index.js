@@ -90,14 +90,14 @@ Like.belongsTo(User, {
     foreignKey: 'userId'
 });
 // 一个管理员用户可以有多个推荐
-// Administrator.hasMany(recommendNote, {
-//     foreignKey: 'adminId'
-// });
+Administrator.hasMany(recommendNote, {
+    foreignKey: 'adminId'
+});
 
 // 一个推荐只能属于一个管理员用户
-// recommendNote.belongsTo(Administrator, {
-//     foreignKey: 'adminId'
-// });
+recommendNote.belongsTo(Administrator, {
+    foreignKey: 'adminId'
+});
 // 一个笔记可以有多个推荐
 Note.hasMany(recommendNote, {
     foreignKey: 'noteId'
