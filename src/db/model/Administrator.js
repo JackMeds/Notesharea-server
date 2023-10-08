@@ -1,5 +1,5 @@
 /**
- * @description 用户数据模型
+ * @description 管理员用户数据模型
  */
 
 const seq = require('../seq');
