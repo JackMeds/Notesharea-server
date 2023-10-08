@@ -2,7 +2,7 @@
  * @description user controller
  */
 
-const { getUserInfo } = require('../services/user');
+const { getUserInfo, createUser } = require('../services/user');
 const { SuccessModel, ErrorModel } = require('../model/ResModel');
 const { registerUserNameNotExistInfo, registerUserNameExistInfo, registerFailInfo, loginFailInfo } = require('../model/ErrorInfo');
 const doCrypto = require('../utils/cryp');
@@ -32,8 +32,8 @@ async function isExist({userName}) {
  * @param {string} password 密码
  * @param {number} gender 性别 (1 男， 2 女， 3 保密) 默认 3
  */
-async function register({ userName, password, gender }) {
-    const userInfo = await getUserInfo(userName);
+async function register({ userName, password, gender, nickName, email, phoneNum, userIntro, picture }) {
+    const userInfo = await getUserInfo({userName});
     console.log(userInfo);
     if (userInfo) {
         //用户名已存在
@@ -44,8 +44,13 @@ async function register({ userName, password, gender }) {
     try {
         await createUser({
             userName,
-            password: doCrypto(password),
-            gender
+            password: doCrypto({password}),
+            gender,
+            nickName,
+            email,
+            phoneNum,
+            userIntro,
+            picture,
         });
         return new SuccessModel();
     } catch (ex) {

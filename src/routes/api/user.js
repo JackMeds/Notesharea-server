@@ -11,11 +11,16 @@ router.prefix("/api/user");
 
 //注册路由
 router.post("/register", genValidator(userValidate), async (ctx, next) => {
-  const { userName, password, gender } = ctx.request.body;
+  const { userName, password, gender, nickName, email, phoneNum, userIntro, picture } = ctx.request.body;
   ctx.body = await register({
     userName,
     password,
     gender,
+    nickName,
+    email,
+    phoneNum, 
+    userIntro,
+    picture,
   });
   //   errno: 0,
   //   data: {
@@ -29,7 +34,7 @@ router.post("/register", genValidator(userValidate), async (ctx, next) => {
 router.post("/isExist", async (ctx, next) => {
   const { userName } = ctx.request.body;
   console.log("api" + userName);
-  ctx.body = await isExist(userName);
+  ctx.body = await isExist({userName});
 });
 
 //登录
