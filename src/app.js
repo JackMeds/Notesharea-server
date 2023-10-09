@@ -24,6 +24,7 @@ app.use(cors({
 const index = require('./routes/index')
 // // const users = require('./routes/users')
 const userAPIRouter = require('./routes/api/user')
+const adminAPIRouter = require('./routes/api/admin')
 const noteAPIRouter = require('./routes/api/note')
 
 // error handler
@@ -70,6 +71,7 @@ app.use(session({
 // routes
 app.use(index.routes(), index.allowedMethods())
 app.use(userAPIRouter.routes(), userAPIRouter.allowedMethods())
+app.use(adminAPIRouter.routes(), adminAPIRouter.allowedMethods())
 app.use(noteAPIRouter.routes(), noteAPIRouter.allowedMethods())
 
 // error-handling
