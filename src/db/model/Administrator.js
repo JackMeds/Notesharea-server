@@ -6,7 +6,7 @@ const seq = require('../seq');
 const { STRING, DECIMAL } = require('../types');
 
 //users
-const Administrator = seq.define('user', {
+const Administrator = seq.define('administrator', {
     userName: {
         type: STRING,
         allowNull: false,
