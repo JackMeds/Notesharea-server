@@ -77,7 +77,7 @@ async function login(ctx, userName, password) {
     const userInfo = await getUserInfo(loginMessage);
     if (!userInfo){
         //登陆失败
-        console.log(userInfo);
+        // console.log(userInfo);
         return new ErrorModel(loginFailInfo);
     }
 
@@ -85,7 +85,11 @@ async function login(ctx, userName, password) {
     if (ctx.session.userInfo == null) {
         ctx.session.userInfo = userInfo;
     }
-    return new SuccessModel();
+    // console.log(ctx.session);
+    const data = {
+        session: ctx.session
+    }
+    return new SuccessModel(data);
 }
 
 module.exports = {
