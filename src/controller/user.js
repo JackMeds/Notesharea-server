@@ -44,7 +44,7 @@ async function register({ userName, password, gender, nickName, email, phoneNum,
     try {
         await createUser({
             userName,
-            password: doCrypto({password}),
+            password: doCrypto(password),
             gender,
             nickName,
             email,
