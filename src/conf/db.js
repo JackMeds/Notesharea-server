@@ -4,6 +4,7 @@ const { isProd } = require('../utils/env');
 let REDIS_CONF = {
     port: 6379,
     host: '8.130.39.153',
+    password: 'Hedaye123',
 };
 
 if (isProd) {
@@ -11,6 +12,7 @@ if (isProd) {
         //线上的redis配置
         port: 6379,
         host: '8.130.39.153',
+        password: 'Hedaye123',
     };
 }
 

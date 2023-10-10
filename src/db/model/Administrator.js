@@ -5,8 +5,8 @@
 const seq = require('../seq');
 const { STRING, DECIMAL } = require('../types');
 
-//users
-const Administrator = seq.define('user', {
+//administrator
+const Administrator = seq.define('administrator', {
     userName: {
         type: STRING,
         allowNull: false,
@@ -34,7 +34,7 @@ const Administrator = seq.define('user', {
     userIntro: {
         type: STRING,
         comment: '个人简介'
-    },
+    }
 });
 
 module.exports = Administrator;

@@ -20,6 +20,8 @@ async function getUserInfo({ userName, password }) {
         Object.assign(whereOpt, { password });
     }
 
+    console.log(whereOpt);
+
     //查询
     const result = await User.findOne({
         attributes: [
@@ -40,10 +42,13 @@ async function getUserInfo({ userName, password }) {
         return result;
     }
 
-    //格式化
-    const formatRes = formatUser(result.dataValues);
+    return result.dataValues;
 
-    return formatRes;
+    //TODO:格式化
+    // //格式化
+    // const formatRes = formatUser(result.dataValues);
+
+    // return formatRes;
 }
 
 /**

@@ -55,17 +55,19 @@ app.use(session({
   },
   // ttl : 3 * 24 * 60 * 60 * 1000, // redis 过期时间
   store: redisStore({
-    all: `${REDIS_CONF.host}:${REDIS_CONF.port}`
+    host: REDIS_CONF.host,
+    port: REDIS_CONF.port,
+    password: REDIS_CONF.password
   })
 }))
 
-// // logger
-// app.use(async (ctx, next) => {
-//   const start = new Date()
-//   await next()
-//   const ms = new Date() - start
-//   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
-// })
+// logger
+app.use(async (ctx, next) => {
+  const start = new Date()
+  await next()
+  const ms = new Date() - start
+  console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
+})
 
 // routes
 app.use(index.routes(), index.allowedMethods())
