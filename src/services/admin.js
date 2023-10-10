@@ -52,10 +52,12 @@ async function createAdmin({
   userName,
   password,
   email,
-  picture,
   phoneNum,
   userIntro,
+  picture,
 }) {
+  console.log("cccservice" + userName);
+  console.log("cccservice" + password);
   const result = await Administrator.create({
     userName: userName,
     password: password,

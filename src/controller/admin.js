@@ -2,91 +2,106 @@
  * @description admin controller
  */
 
-const { getAdminInfo, createAdmin } = require('../services/admin');
-const { SuccessModel, ErrorModel } = require('../model/ResModel');
-const { registerUserNameNotExistInfo, registerUserNameExistInfo, registerFailInfo, loginFailInfo } = require('../model/ErrorInfo');
-const doCrypto = require('../utils/cryp');
+const { getAdminInfo, createAdmin } = require("../services/admin");
+const { SuccessModel, ErrorModel } = require("../model/ResModel");
+const {
+  registerUserNameNotExistInfo,
+  registerUserNameExistInfo,
+  registerFailInfo,
+  loginFailInfo,
+} = require("../model/ErrorInfo");
+const doCrypto = require("../utils/cryp");
 
 /**
- * 
+ *
  * @param {string} userName 用户名
  */
-async function isExist({userName}) {
-    // console.log("controller"+userName);
-    const userInfo = await getAdminInfo({userName});
-    // console.log(userInfo);
-    if (userInfo) {
-        //已存在
-        //{ code: 0, data: {....} }
-        return new SuccessModel(userInfo);
-    } else {
-        //不存在
-        //{ code: 10003, message: '用户名未存在' }
-        return new ErrorModel(registerUserNameNotExistInfo);
-    }
+async function isExist({ userName }) {
+  // console.log("controller"+userName);
+  const userInfo = await getAdminInfo({ userName });
+  // console.log(userInfo);
+  if (userInfo) {
+    //已存在
+    //{ code: 0, data: {....} }
+    return new SuccessModel(userInfo);
+  } else {
+    //不存在
+    //{ code: 10003, message: '用户名未存在' }
+    return new ErrorModel(registerUserNameNotExistInfo);
+  }
 }
 
 /**
- * 
+ *
  * @param {string} userName 用户名
  * @param {string} password 密码
  */
-async function adminRegister({ userName, password, email, phoneNum, userIntro, picture }) {
-    const userInfo = await getAdminInfo({userName});
-    console.log(userInfo);
-    if (userInfo) {
-        //用户名已存在
-        return new ErrorModel(registerUserNameExistInfo);
-    }
+async function adminRegister({
+  userName,
+  password,
+  email,
+  phoneNum,
+  userIntro,
+  picture,
+}) {
+  console.log("controller" + password);
+  const userInfo = await getAdminInfo({ userName });
+  // console.log(userInfo);
+  if (userInfo) {
+    //用户名已存在
+    return new ErrorModel(registerUserNameExistInfo);
+  }
 
-    //注册 service
-    try {
-        await createAdmin({
-            userName,
-            password: doCrypto({password}),
-            email,
-            phoneNum,
-            userIntro,
-            picture,
-        });
-        return new SuccessModel();
-    } catch (ex) {
-        console.error(ex.message, ex.stack);
-        return new ErrorModel(registerFailInfo);
-    }
-
+  //注册 service
+  try {
+    console.log("c:" + password);
+    console.log("c:" + doCrypto(password));
+    const passwordCrypto = doCrypto(password);
+    await createAdmin({
+      userName,
+      password: passwordCrypto,
+      email,
+      phoneNum,
+      userIntro,
+      picture,
+    });
+    return new SuccessModel();
+  } catch (ex) {
+    console.error(ex.message, ex.stack);
+    return new ErrorModel(registerFailInfo);
+  }
 }
 
 /**
- * 
+ *
  * @param {Object} ctx koa2 ctx
- * @param {string} userName 用户名 
+ * @param {string} userName 用户名
  * @param {string} password 密码
  */
 async function login(ctx, userName, password) {
-    //登陆成功 ctx.session.userInfo = xxx
-    //获取用户信息
-    const loginMessage = {
-        userName, 
-        password: doCrypto(password)
-    }
-    console.log(loginMessage);
-    const userInfo = await getAdminInfo(loginMessage);
-    if (!userInfo){
-        //登陆失败
-        console.log(userInfo);
-        return new ErrorModel(loginFailInfo);
-    }
+  //登陆成功 ctx.session.userInfo = xxx
+  //获取用户信息
+  const loginMessage = {
+    userName,
+    password: doCrypto(password),
+  };
+  console.log(loginMessage);
+  const userInfo = await getAdminInfo(loginMessage);
+  if (!userInfo) {
+    //登陆失败
+    console.log(userInfo);
+    return new ErrorModel(loginFailInfo);
+  }
 
-    //登陆成功
-    if (ctx.session.userInfo == null) {
-        ctx.session.userInfo = userInfo;
-    }
-    return new SuccessModel();
+  //TODO：登陆成功
+//   if (ctx.session.userInfo == null) {
+//     ctx.session.userInfo = userInfo;
+//   }
+  return new SuccessModel();
 }
 
 module.exports = {
-    isExist,
-    adminRegister,
-    login
-}
+  isExist,
+  adminRegister,
+  login,
+};

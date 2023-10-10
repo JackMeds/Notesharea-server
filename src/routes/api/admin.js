@@ -11,22 +11,9 @@ router.prefix("/api/admin");
 
 //注册路由
 router.post("/adminRegister", genValidator(adminValidate), async (ctx, next) => {
-  const {
-    userName,
-    password,
-    email,
-    picture,
-    phoneNum,
-    userIntro,
-  } = ctx.request.body;
-  ctx.body = await adminRegister({
-    userName,
-    password,
-    email,
-    picture,
-    phoneNum,
-    userIntro,
-  });
+  const { userName, password, email, phoneNum, userIntro, picture } = ctx.request.body;
+  console.log({ userName, password, email, phoneNum, userIntro, picture });
+  ctx.body = await adminRegister({ userName, password, email, phoneNum, userIntro, picture });
   //   errno: 0,
   //   data: {
   //     userName,
