@@ -34,7 +34,7 @@ async function isExist({userName}) {
  */
 async function register({ userName, password, gender, nickName, email, phoneNum, userIntro, picture }) {
     const userInfo = await getUserInfo({userName});
-    console.log(userInfo);
+    // console.log(userInfo);
     if (userInfo) {
         //用户名已存在
         return new ErrorModel(registerUserNameExistInfo);
