@@ -3,17 +3,23 @@
  */
 
 const router = require('koa-router')();
-const { createNoteController } = require('../../controller/note');
+const { createNoteController, getNoteDetailController } = require('../../controller/note');
 
 router.prefix('/api/note');
 
 //查询推荐笔记列表
 router.post("/recommend", async (ctx, next) => {
     const { userName } = ctx.request.body;
-    console.log("api" + userName);
+    // console.log("api" + userName);
     // ctx.body = await isExist(userName);
 });
-//TODO:查询笔记详情
+//查询笔记详情
+router.post("/detail", async (ctx, next) => {
+    const { noteId } = ctx.request.body;
+    console.log(ctx.request.body)
+    console.log("api" + noteId);
+    ctx.body = await getNoteDetailController({noteId});
+});
 
 //TODO:发布笔记
 router.post("/create", async (ctx, next) => {

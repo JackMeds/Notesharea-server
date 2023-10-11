@@ -2,10 +2,11 @@
  * @description note controller
  */
 
-const { createNote } = require('../services/note');
+const { createNote, getNoteDetail } = require('../services/note');
 const { SuccessModel, ErrorModel } = require('../model/ResModel');
 const { createNoteFailInfo } = require('../model/ErrorInfo');
 
+//创建笔记
 async function createNoteController({ userId, noteTitle, noteContent, img, downloadLink }) {
     try {
         await createNote({
@@ -22,6 +23,19 @@ async function createNoteController({ userId, noteTitle, noteContent, img, downl
     }
 }
 
+//查询笔记详情
+async function getNoteDetailController({ noteId }) {
+    try {
+        const result = await getNoteDetail({
+            noteId
+        });
+        return new SuccessModel(result);
+    } catch (ex) {
+        console.error(ex.message, ex.stack);
+        return new ErrorModel(createNoteFailInfo);
+    }
+}
 module.exports = {
-    createNoteController
+    createNoteController,
+    getNoteDetailController
 }
