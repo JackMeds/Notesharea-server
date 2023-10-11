@@ -12,7 +12,7 @@ const Administrator = require('../db/model/Administrator');
 const recommendNote = require('../db/model/recommendNote');
 // const { formatUser, formatNote, formatComment, formatReply } = require('./_format');
 
-
+//创建笔记
 async function createNote ({userId, noteTitle, noteContent, img, downloadLink}) {
     const result = await Note.create({
         userId: userId,
@@ -25,6 +25,53 @@ async function createNote ({userId, noteTitle, noteContent, img, downloadLink}) 
     return result.dataValues;
 }
 
+//查询笔记详情
+async function getNoteDetail ({noteId}) {
+    const result = await Note.findOne({
+        where: {
+            id: noteId
+        },
+        include: [
+            {
+                model: User,
+                attributes: ['userName', 'nickName', 'picture']
+            },
+            {
+                model: Collect,
+                attributes: ['userId', 'noteId']
+            },
+            {
+                model: Comment,
+                attributes: ['id', 'userId', 'noteId', 'content', 'createdAt'],
+                include: [
+                    {
+                        model: User,
+                        attributes: ['userName', 'nickName', 'picture']
+                    },
+                    {
+                        model: Reply,
+                        attributes: ['id', 'userId', 'commentId', 'content', 'createdAt'],
+                        include: [
+                            {
+                                model: User,
+                                attributes: ['userName', 'nickName', 'picture']
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                model: Like,
+                attributes: ['userId', 'noteId']
+            }
+        ]
+    });
+    if (result == null) {
+        return result;
+    }
+    return result.dataValues;
+}
 module.exports = {
-    createNote
+    createNote,
+    getNoteDetail
 }
