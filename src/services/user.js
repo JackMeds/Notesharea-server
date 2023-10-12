@@ -4,6 +4,7 @@
 
 const { User } = require("../db/model/index");
 const { formatUser } = require("./_format");
+const { DEFAULT_PICTURE } = require("../conf/constant");
 /**
  *
  * @param {string} userName 用户名
@@ -76,7 +77,7 @@ async function createUser({
         email: email,
         phoneNum: phoneNum,
         userIntro: userIntro,
-        picture,
+        picture: picture ? picture : DEFAULT_PICTURE,
     });
     // console.log(result.dataValues);
     return result.dataValues;
