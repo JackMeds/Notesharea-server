@@ -13,12 +13,12 @@ const {
 router.prefix("/api/note");
 
 //查询推荐笔记列表
-router.post("/recommend", async (ctx, next) => {
+router.get("/recommend", async (ctx, next) => {
   ctx.body = await getRecommendNoteController();
-});
+});     
 
 //查询所有笔记
-router.post("/allNotes", async (ctx, next) => {
+router.get("/allNotes", async (ctx, next) => {
   ctx.body = await getAllNotesController();
 });
 
