@@ -2,38 +2,47 @@
  * @description note api 路由
  */
 
-const router = require('koa-router')();
-const { createNoteController, getNoteDetailController } = require('../../controller/note');
+const router = require("koa-router")();
+const {
+  createNoteController,
+  getNoteDetailController,
+  getAllNotesController,
+} = require("../../controller/note");
 
-router.prefix('/api/note');
+router.prefix("/api/note");
 
 //查询推荐笔记列表
 router.post("/recommend", async (ctx, next) => {
-    const { userName } = ctx.request.body;
-    // console.log("api" + userName);
-    // ctx.body = await isExist(userName);
+  const { userName } = ctx.request.body;
+  // console.log("api" + userName);
+  // ctx.body = await isExist(userName);
 });
+
+//查询所有笔记
+router.post("/allNotes", async (ctx, next) => {
+  ctx.body = await getAllNotesController();
+});
+
 //查询笔记详情
 router.post("/detail", async (ctx, next) => {
-    const { noteId } = ctx.request.body;
-    console.log(ctx.request.body)
-    console.log("api" + noteId);
-    ctx.body = await getNoteDetailController({noteId});
+  const { noteId } = ctx.request.body;
+  console.log(ctx.request.body);
+  console.log("api" + noteId);
+  ctx.body = await getNoteDetailController({ noteId });
 });
 
 //TODO:发布笔记
 router.post("/create", async (ctx, next) => {
-    const { userId, noteTitle, noteContent, img, downloadLink } = ctx.request.body;
-    ctx.body = await createNoteController({
-        userId,
-        noteTitle,
-        noteContent,
-        img,
-        downloadLink
-    });
-
-}
-);
+  const { userId, noteTitle, noteContent, img, downloadLink } =
+    ctx.request.body;
+  ctx.body = await createNoteController({
+    userId,
+    noteTitle,
+    noteContent,
+    img,
+    downloadLink,
+  });
+});
 //TODO:修改笔记
 
 //TODO:删除笔记
