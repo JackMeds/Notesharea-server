@@ -31,7 +31,7 @@ router.post("/detail", async (ctx, next) => {
   ctx.body = await getNoteDetailController({ noteId });
 });
 
-//TODO:发布笔记
+//发布笔记
 router.post("/create", async (ctx, next) => {
   const { userId, noteTitle, noteContent, img, downloadLink } =
     ctx.request.body;
