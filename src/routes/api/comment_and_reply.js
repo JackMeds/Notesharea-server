@@ -8,10 +8,12 @@ const { createCommentController, createReplyController, getCommentListController
 router.prefix('/api/comment_and_reply');
 
 //查询评论列表
-router.post("/list", async (ctx, next) => {
-    const { noteId } = ctx.request.body;
-    // console.log("api" + userName);
+router.get("/list", async (ctx, next) => {
+    const { noteId } = ctx.query;
+    console.log(ctx.query);
     ctx.body = await getCommentListController({ noteId });
+    // const { noteId } = ctx.request.body;
+    // ctx.body = await getCommentListController({ noteId });
 });
 
 //发布评论
