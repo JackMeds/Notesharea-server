@@ -2,7 +2,7 @@
  * @description note controller
  */
 
-const { createNote, getNoteDetail, getAllNotes } = require("../services/note");
+const { createNote, getNoteDetail, getAllNotes, getRecommendNote } = require("../services/note");
 const { SuccessModel, ErrorModel } = require("../model/ResModel");
 const { createNoteFailInfo } = require("../model/ErrorInfo");
 
@@ -27,6 +27,16 @@ async function createNoteController({
     console.error(ex.message, ex.stack);
     return new ErrorModel(createNoteFailInfo);
   }
+}
+//查询推荐笔记列表
+async function getRecommendNoteController() {
+    try{
+        const result = await getRecommendNote();
+        return new SuccessModel(result);
+    }catch(ex){
+        console.error(ex.message, ex.stack);
+        return new ErrorModel(createNoteFailInfo);
+    }
 }
 
 //查询所有笔记
@@ -56,4 +66,5 @@ module.exports = {
   createNoteController,
   getAllNotesController,
   getNoteDetailController,
+  getRecommendNoteController,
 };

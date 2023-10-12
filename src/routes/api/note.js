@@ -7,15 +7,14 @@ const {
   createNoteController,
   getNoteDetailController,
   getAllNotesController,
+  getRecommendNoteController,
 } = require("../../controller/note");
 
 router.prefix("/api/note");
 
 //查询推荐笔记列表
 router.post("/recommend", async (ctx, next) => {
-  const { userName } = ctx.request.body;
-  // console.log("api" + userName);
-  // ctx.body = await isExist(userName);
+  ctx.body = await getRecommendNoteController();
 });
 
 //查询所有笔记

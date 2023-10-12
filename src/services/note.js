@@ -31,6 +31,60 @@ async function createNote({
   return result.dataValues;
 }
 
+//查询推荐笔记列表
+async function getRecommendNote() {
+  const result = await recommendNote.findAll({
+    attributes: ["noteId"],
+    include: [
+      {
+        model: Note,
+        attributes: ["id", "title", "content", "createdAt"],
+        include: [
+          {
+            model: User,
+            attributes: ["userName", "nickName", "picture"],
+          },
+          {
+            model: Collect,
+            attributes: ["userId", "noteId"],
+          },
+          {
+            model: Comment,
+            attributes: ["id", "userId", "noteId", "content", "createdAt"],
+            include: [
+              {
+                model: User,
+                attributes: ["userName", "nickName", "picture"],
+              },
+              {
+                model: Reply,
+                attributes: [
+                  "id",
+                  "userId",
+                  "commentId",
+                  "content",
+                  "createdAt",
+                ],
+                include: [
+                  {
+                    model: User,
+                    attributes: ["userName", "nickName", "picture"],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: Like,
+            attributes: ["userId", "noteId"],
+          },
+        ],
+      },
+    ],
+  });
+  return result.map((item) => item.dataValues);
+}
+
 //查询所有笔记
 async function getAllNotes() {
   const notes = await Note.findAll({
@@ -122,5 +176,6 @@ async function getNoteDetail({ noteId }) {
 module.exports = {
   createNote,
   getNoteDetail,
-  getAllNotes
+  getAllNotes,
+  getRecommendNote,
 };
