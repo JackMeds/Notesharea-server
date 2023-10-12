@@ -26,6 +26,7 @@ const index = require('./routes/index')
 const userAPIRouter = require('./routes/api/user')
 const adminAPIRouter = require('./routes/api/admin')
 const noteAPIRouter = require('./routes/api/note')
+const commentsAPIRouter = require('./routes/api/comment_and_reply')
 
 // error handler
 onerror(app)
@@ -75,6 +76,7 @@ app.use(index.routes(), index.allowedMethods())
 app.use(userAPIRouter.routes(), userAPIRouter.allowedMethods())
 app.use(adminAPIRouter.routes(), adminAPIRouter.allowedMethods())
 app.use(noteAPIRouter.routes(), noteAPIRouter.allowedMethods())
+app.use(commentsAPIRouter.routes(), commentsAPIRouter.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {
