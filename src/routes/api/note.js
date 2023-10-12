@@ -23,17 +23,22 @@ router.post("/allNotes", async (ctx, next) => {
 });
 
 //查询笔记详情
-router.post("/detail", async (ctx, next) => {
-  const { noteId } = ctx.request.body;
-  console.log(ctx.request.body);
+router.get("/detail", async (ctx, next) => {
+  const { noteId } = ctx.query;
+  console.log(ctx.query);
   console.log("api" + noteId);
   ctx.body = await getNoteDetailController({ noteId });
+  // const { noteId } = ctx.request.body;
+  // console.log(ctx.request.body);
+  // console.log("api" + noteId);
+  // ctx.body = await getNoteDetailController({ noteId });
 });
 
 //发布笔记
 router.post("/create", async (ctx, next) => {
   const { userId, noteTitle, noteContent, img, downloadLink } =
     ctx.request.body;
+  console.log(ctx.request.body);
   ctx.body = await createNoteController({
     userId,
     noteTitle,
