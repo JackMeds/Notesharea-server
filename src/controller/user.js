@@ -92,8 +92,15 @@ async function login(ctx, userName, password) {
     return new SuccessModel(data);
 }
 
+//退出登录
+async function logoutController(ctx) {
+    delete ctx.session.userInfo;
+    return new SuccessModel();
+}
+
 module.exports = {
     isExist,
     register,
-    login
+    login,
+    logoutController,
 }
