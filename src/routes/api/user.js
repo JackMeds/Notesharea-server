@@ -3,7 +3,7 @@
  */
 
 const router = require("koa-router")();
-const { isExist,register, login } = require("../../controller/user");
+const { isExist,register, login, logoutController } = require("../../controller/user");
 const userValidate = require("../../validator/user");
 const { genValidator } = require("../../middlewares/validator");
 
@@ -43,6 +43,10 @@ router.post("/login", async (ctx, next) => {
   ctx.body = await login(ctx, userName, password);  
 })
 
+//退出登录
+router.get("/logout", async (ctx, next) => {
+  ctx.body = await logoutController(ctx);
+});
 
 //测试
 // router.post("/test", async (ctx, next) => {
