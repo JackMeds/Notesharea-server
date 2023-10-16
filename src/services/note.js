@@ -122,6 +122,10 @@ async function getAllNotes() {
         model: Like,
         attributes: ["userId", "noteId"],
       },
+      {
+        model: recommendNote,
+        attributes: ["noteId", "isRecommend"],
+      }
     ],
   });
   return notes.map((note) => note.dataValues);
@@ -173,9 +177,33 @@ async function getNoteDetail({ noteId }) {
   }
   return result.dataValues;
 }
+
+//添加推荐笔记
+async function addRecommendNote({ adminId, noteId }) {
+  const result = await recommendNote.create({
+    adminId: adminId,
+    noteId: noteId,
+    isRecommend: true,
+  });
+  return result.dataValues;
+}
+
+//移除推荐笔记
+async function removeRecommendNote({ adminId, noteId }) {
+  const result = await recommendNote.destroy({
+    where: {
+      adminId: adminId,
+      noteId: noteId,
+    },
+  });
+  return result.dataValues;
+}
+
 module.exports = {
   createNote,
   getNoteDetail,
   getAllNotes,
   getRecommendNote,
+  addRecommendNote,
+  removeRecommendNote,
 };

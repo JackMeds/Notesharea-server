@@ -97,7 +97,7 @@ async function login(ctx, userName, password) {
 //   if (ctx.session.userInfo == null) {
 //     ctx.session.userInfo = userInfo;
 //   }
-  return new SuccessModel();
+  return new SuccessModel(userInfo);
 }
 
 module.exports = {
