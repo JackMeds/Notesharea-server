@@ -98,8 +98,8 @@ Administrator.hasMany(recommendNote, {
 recommendNote.belongsTo(Administrator, {
     foreignKey: 'adminId'
 });
-// 一个笔记可以有多个推荐
-Note.hasMany(recommendNote, {
+// 一个笔记只能有一个推荐
+Note.hasOne(recommendNote, {
     foreignKey: 'noteId'
 });
 // 一个推荐只能属于一个笔记
