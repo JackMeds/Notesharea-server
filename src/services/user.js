@@ -2,6 +2,7 @@
  * @description user service
  */
 
+const { str } = require("ajv");
 const { User } = require("../db/model/index");
 const { formatUser } = require("./_format");
 const { DEFAULT_PICTURE } = require("../conf/constant");
@@ -83,7 +84,101 @@ async function createUser({
     return result.dataValues;
 }
 
+//获取个人数据
+async function getPeronaldataInfo(userId) {
+    console.log('service', userId)
+    const whereOpt = {
+        id: userId,
+    };
+    try {
+        const userInfo = await User.findOne({
+            where: whereOpt,// 查询条件是id等于userId
+            attributes: [
+                "id",
+                "userName",
+                "nickName",
+                "gender",
+                "email",
+                "phoneNum",
+                "userIntro",
+                "picture"
+            ],
+        });
+        if (userInfo === null) {
+            console.log('No user found for the given userId.');
+        } else {
+            console.log('serviceinfo', userInfo.dataValues);  // Print the user information
+        }
+        return userInfo;
+    } catch (error) {
+        console.error('Error in getUserInfo:', error);
+        throw new Error('Failed to get user information.');
+    }
+}
+
+/**
+ * 修改个人信息
+ * @param {Object} newUserInfo 包含新的用户信息
+ * @param {string} newUserInfo.newUserName 新用户名
+ * @param {string} newUserInfo.newNickName 新昵称
+ * @param {string} newUserInfo.newEmail 新邮箱
+ * @param {string} newUserInfo.newPhoneNum 新手机号
+ * @param {string} newUserInfo.newUserIntro 新个人简介
+ * @param {string} newUserInfo.newPicture 新头像
+ * @param {Object} authInfo 包含用户名和密码
+ * @param {string} authInfo.userName 用户名
+ * @param {string} authInfo.password 密码
+ */
+
+async function updateUser(newUserInfo, authInfo) {
+    const { newUserName, newNickName, newGender, newEmail, newPhoneNum, newUserIntro, newPicture } = newUserInfo;
+    const { userId } = authInfo;
+    //拼接修改内容
+    const updateData = {};
+    if (newUserName) {
+        updateData.userName = newUserName;
+    }
+    if (newNickName) {
+        updateData.nickName = newNickName;
+    }
+    if (newGender) {
+        updateData.gender = newGender;
+    }
+    if (newEmail) {
+        updateData.email = newEmail;
+    }
+    if (newPhoneNum) {
+        updateData.phoneNum = newPhoneNum;
+    }
+    if (newUserIntro) {
+        updateData.userIntro = newUserIntro;
+    }
+    if (newPicture) {
+        updateData.picture = newPicture;
+    }
+    console.log('service', newUserInfo)
+    console.log('service', authInfo)
+    console.log(userId)
+    //拼接查询条件
+    const whereData = {
+        id: authInfo,
+    };
+    //执行修改
+    const result = await User.update(updateData, {
+        where: whereData,
+    });
+
+    return result[0] > 0;//修改的行数
+}
+
+
+
+
+
+
 module.exports = {
     getUserInfo,
     createUser,
+    updateUser,
+    getPeronaldataInfo,
 };
