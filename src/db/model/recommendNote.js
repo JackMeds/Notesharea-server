@@ -14,6 +14,8 @@ const RecommendNote = seq.define('recommendNote', {
     noteId: {
         type: INTEGER,
         allowNull: false,
+        //唯一
+        unique: true,
         comment: '笔记 ID'
     },
     isRecommend: {

@@ -2,7 +2,7 @@
  * @description note controller
  */
 
-const { createNote, getNoteDetail, getAllNotes, getRecommendNote } = require("../services/note");
+const { createNote, getNoteDetail, getAllNotes, getRecommendNote, addRecommendNote, removeRecommendNote } = require("../services/note");
 const { SuccessModel, ErrorModel } = require("../model/ResModel");
 const { createNoteFailInfo } = require("../model/ErrorInfo");
 
@@ -62,9 +62,40 @@ async function getNoteDetailController({ noteId }) {
     return new ErrorModel(createNoteFailInfo);
   }
 }
+
+//添加推荐笔记
+async function addRecommendNoteController({ adminId, noteId }) {
+  try {
+    await addRecommendNote({
+      adminId,
+      noteId,
+    });
+    return new SuccessModel();
+  } catch (ex) {
+    console.error(ex.message, ex.stack);
+    return new ErrorModel(createNoteFailInfo);
+  }
+}
+
+//移除推荐笔记
+async function removeRecommendNoteController({ adminId, noteId }) {
+  try {
+    await removeRecommendNote({
+      adminId,
+      noteId,
+    });
+    return new SuccessModel();
+  } catch (ex) {
+    console.error(ex.message, ex.stack);
+    return new ErrorModel(createNoteFailInfo);
+  }
+}
+
 module.exports = {
   createNoteController,
   getAllNotesController,
   getNoteDetailController,
   getRecommendNoteController,
+  addRecommendNoteController,
+  removeRecommendNoteController
 };
