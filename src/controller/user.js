@@ -11,9 +11,9 @@ const doCrypto = require('../utils/cryp');
  * 
  * @param {string} userName 用户名
  */
-async function isExist({ userName }) {
+async function isExist({userName}) {
     // console.log("controller"+userName);
-    const userInfo = await getUserInfo({ userName });
+    const userInfo = await getUserInfo({userName});
     // console.log(userInfo);
     if (userInfo) {
         //已存在
@@ -33,7 +33,7 @@ async function isExist({ userName }) {
  * @param {number} gender 性别 (1 男， 2 女， 3 保密) 默认 3
  */
 async function register({ userName, password, gender, nickName, email, phoneNum, userIntro, picture }) {
-    const userInfo = await getUserInfo({ userName });
+    const userInfo = await getUserInfo({userName});
     // console.log(userInfo);
     if (userInfo) {
         //用户名已存在
@@ -70,12 +70,12 @@ async function login(ctx, userName, password) {
     //登陆成功 ctx.session.userInfo = xxx
     //获取用户信息
     const loginMessage = {
-        userName,
+        userName, 
         password: doCrypto(password)
     }
     console.log(loginMessage);
     const userInfo = await getUserInfo(loginMessage);
-    if (!userInfo) {
+    if (!userInfo){
         //登陆失败
         // console.log(userInfo);
         return new ErrorModel(loginFailInfo);
@@ -85,14 +85,19 @@ async function login(ctx, userName, password) {
     if (ctx.session.userInfo == null) {
         ctx.session.userInfo = userInfo;
     }
-    return new SuccessModel();
+    // console.log(ctx.session);
+    const data = {
+        session: ctx.session,
+    }
+    // console.log(data);
+    return new SuccessModel(data);
 }
 
 //退出登录
 async function logoutController(ctx) {
-    console.log(ctx.session);
-    delete ctx.session.userInfo;
-    console.log(ctx.session);
+    ctx.session = null;
+    // ctx.cookies.set('Notesharea.sid', '', { expires: new Date(1), path: '/' });
+    // ctx.cookies.set('Notesharea.sid.sig', '', { expires: new Date(1), path: '/' });
     return new SuccessModel();
 }
 
