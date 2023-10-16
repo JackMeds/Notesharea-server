@@ -6,7 +6,7 @@ const seq = require('../seq');
 const { STRING, INTEGER, BOOLEAN } = require('../types');
 
 const RecommendNote = seq.define('recommendNote', {
-    userId: {
+    adminId: {
         type: INTEGER,
         allowNull: false,
         comment: '用户 ID'
@@ -14,6 +14,8 @@ const RecommendNote = seq.define('recommendNote', {
     noteId: {
         type: INTEGER,
         allowNull: false,
+        //唯一
+        unique: true,
         comment: '笔记 ID'
     },
     isRecommend: {

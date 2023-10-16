@@ -92,32 +92,20 @@ router.patch("/changeInfo", genValidator(userValidate), async (ctx, next) => {
    console.log('apis',)
 })
 
+// 检查登录状态的路由
+router.get('/check', async (ctx) => {
+  if (ctx.session.user) {
+      ctx.body = { message: '已登录', user: ctx.session.user };
+  } else {
+      ctx.body = { message: '未登录' };
+  }
+});
+
+//退出登录
+router.post("/logout", async (ctx, next) => {
+  ctx.body = await logoutController(ctx);
+});
 
 
-//测试
-// router.post("/test", async (ctx, next) => {
-//   console.log(ctx.request.body);
-//   const { username, password } = ctx.request.body;
-//     let result = {
-//         code: -1,
-//         message: "登录失败",
-//     };
-//     function mytest(username, password){
-//     if (username == "123456" && password == "123456") {
-//       result = {
-//         code: 0,
-//         message: "登录成功",
-//         data: {
-//           username,
-//           password,
-//         }
-//       };
-//       return result;
-//     } else {
-//       return result;
-//     }
-//   };
-//   ctx.body = await mytest(username, password);
-// });
 
 module.exports = router;

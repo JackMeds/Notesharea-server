@@ -23,6 +23,7 @@ async function getAdminInfo({ userName, password }) {
   //查询
   const result = await Administrator.findOne({
     attributes: [
+      "id",
       "userName",
       "password",
       "email",

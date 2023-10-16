@@ -2,76 +2,244 @@
  * @description note service
  */
 
-const Note = require('../db/model/Note');
-const User = require('../db/model/User');
-const Collect = require('../db/model/Collect');
-const Comment = require('../db/model/Comment');
-const Like = require('../db/model/Like');
-const Reply = require('../db/model/Reply');
-const Administrator = require('../db/model/Administrator');
-const recommendNote = require('../db/model/recommendNote');
+const Note = require("../db/model/Note");
+const User = require("../db/model/User");
+const Collect = require("../db/model/Collect");
+const Comment = require("../db/model/Comment");
+const Like = require("../db/model/Like");
+const Reply = require("../db/model/Reply");
+const Administrator = require("../db/model/Administrator");
+const recommendNote = require("../db/model/recommendNote");
 // const { formatUser, formatNote, formatComment, formatReply } = require('./_format');
 
 //创建笔记
-async function createNote ({userId, noteTitle, noteContent, img, downloadLink}) {
-    const result = await Note.create({
-        userId: userId,
-        title: noteTitle,
-        content: noteContent,
-        img: img,
-        downloadLink: downloadLink
-    });
-    // console.log(result.dataValues);
-    return result.dataValues;
+async function createNote({
+  userId,
+  noteTitle,
+  noteContent,
+  img,
+  downloadLink,
+}) {
+  const result = await Note.create({
+    userId: userId,
+    title: noteTitle,
+    content: noteContent,
+    img: img,
+    downloadLink: downloadLink,
+  });
+  // console.log(result.dataValues);
+  return result.dataValues;
+}
+
+//查询推荐笔记列表
+async function getRecommendNote() {
+  const result = await recommendNote.findAll({
+    attributes: ["noteId"],
+    include: [
+      {
+        model: Note,
+        attributes: ["id", "title", "content", "createdAt"],
+        include: [
+          {
+            model: User,
+            attributes: ["userName", "nickName", "picture"],
+          },
+          {
+            model: Collect,
+            attributes: ["userId", "noteId"],
+          },
+          {
+            model: Comment,
+            attributes: ["id", "userId", "noteId", "content", "createdAt"],
+            include: [
+              {
+                model: User,
+                attributes: ["userName", "nickName", "picture"],
+              },
+              {
+                model: Reply,
+                attributes: [
+                  "id",
+                  "userId",
+                  "commentId",
+                  "content",
+                  "createdAt",
+                ],
+                include: [
+                  {
+                    model: User,
+                    attributes: ["userName", "nickName", "picture"],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: Like,
+            attributes: ["userId", "noteId"],
+          },
+        ],
+      },
+    ],
+  });
+  return result.map((item) => item.dataValues);
+}
+
+//查询所有笔记
+async function getAllNotes() {
+  const notes = await Note.findAll({
+    attributes: ["id", "title", "content", "createdAt"], // 选择你需要的笔记属性
+    include: [
+      {
+        model: User,
+        attributes: ["userName", "nickName", "picture"],
+      },
+      {
+        model: Collect,
+        attributes: ["userId", "noteId"],
+      },
+      {
+        model: Comment,
+        attributes: ["id", "userId", "noteId", "content", "createdAt"],
+        include: [
+          {
+            model: User,
+            attributes: ["userName", "nickName", "picture"],
+          },
+          {
+            model: Reply,
+            attributes: ["id", "userId", "commentId", "content", "createdAt"],
+            include: [
+              {
+                model: User,
+                attributes: ["userName", "nickName", "picture"],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        model: Like,
+        attributes: ["userId", "noteId"],
+      },
+      {
+        model: recommendNote,
+        attributes: ["noteId", "isRecommend"],
+      }
+    ],
+  });
+  return notes.map((note) => note.dataValues);
 }
 
 //查询笔记详情
-async function getNoteDetail ({noteId}) {
-    const result = await Note.findOne({
-        where: {
-            id: noteId
-        },
+async function getNoteDetail({ noteId }) {
+  const result = await Note.findOne({
+    where: {
+      id: noteId,
+    },
+    include: [
+      {
+        model: User,
+        attributes: ["userName", "nickName", "picture"],
+      },
+      {
+        model: Collect,
+        attributes: ["userId", "noteId"],
+      },
+      {
+        model: Comment,
+        attributes: ["id", "userId", "noteId", "content", "createdAt"],
         include: [
-            {
+          {
+            model: User,
+            attributes: ["userName", "nickName", "picture"],
+          },
+          {
+            model: Reply,
+            attributes: ["id", "userId", "commentId", "content", "createdAt"],
+            include: [
+              {
                 model: User,
-                attributes: ['userName', 'nickName', 'picture']
-            },
-            {
-                model: Collect,
-                attributes: ['userId', 'noteId']
-            },
-            {
-                model: Comment,
-                attributes: ['id', 'userId', 'noteId', 'content', 'createdAt'],
-                include: [
-                    {
-                        model: User,
-                        attributes: ['userName', 'nickName', 'picture']
-                    },
-                    {
-                        model: Reply,
-                        attributes: ['id', 'userId', 'commentId', 'content', 'createdAt'],
-                        include: [
-                            {
-                                model: User,
-                                attributes: ['userName', 'nickName', 'picture']
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                model: Like,
-                attributes: ['userId', 'noteId']
-            }
-        ]
-    });
-    if (result == null) {
-        return result;
+                attributes: ["userName", "nickName", "picture"],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        model: Like,
+        attributes: ["userId", "noteId"],
+      },
+    ],
+  });
+  if (result == null) {
+    return result;
+  }
+  return result.dataValues;
+}
+
+//添加推荐笔记
+async function addRecommendNote({ adminId, noteId }) {
+  const existingRecommendNote = await recommendNote.findOne({
+    where: {
+      noteId,
     }
-    return result.dataValues;
+  });
+  if (existingRecommendNote) {
+    //更改推荐状态
+    const updatedRecommendNote = await existingRecommendNote.update(
+      {
+        adminId,
+        isRecommend: true // 这里默认设置为 true，您也可以根据需要更改
+      },
+      {
+        where: {
+          noteId
+        }
+      }
+    )
+    return updatedRecommendNote;
+  } else {
+    // 执行插入操作
+    const newRecommendNote = await recommendNote.create({
+      adminId,
+      noteId,
+      isRecommend: true // 这里默认设置为 true，您也可以根据需要更改
+    });
+    return newRecommendNote;
+  }
 }
+
+//移除推荐笔记
+async function removeRecommendNote({ adminId, noteId }) {
+  const recommendNoteToDelete = await recommendNote.findOne({
+    where: {
+      noteId
+    }
+  });
+  if (recommendNoteToDelete) {
+    await recommendNoteToDelete.update(
+      {
+        adminId,
+        isRecommend: false // 这里默认设置为 false，您也可以根据需要更改
+      },
+      {
+        where: {
+          noteId
+        }
+      }
+    )
+    return '推荐笔记已删除';
+  } else {
+    return '找不到要删除的推荐笔记';
+  }
+}
+
 module.exports = {
-    createNote,
-    getNoteDetail
-}
+  createNote,
+  getNoteDetail,
+  getAllNotes,
+  getRecommendNote,
+  addRecommendNote,
+  removeRecommendNote,
+};

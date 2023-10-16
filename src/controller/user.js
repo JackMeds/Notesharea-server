@@ -86,11 +86,15 @@ async function login(ctx, userName, password) {
     if (ctx.session.userInfo == null) {
         ctx.session.userInfo = userInfo;
     }
-    // console.log(ctx.session);
-    const data = {
-        session: ctx.session
-    }
-    return new SuccessModel(data);
+    return new SuccessModel();
+}
+
+//退出登录
+async function logoutController(ctx) {
+    console.log(ctx.session);
+    delete ctx.session.userInfo;
+    console.log(ctx.session);
+    return new SuccessModel();
 }
 
 // 获取个人信息数据
