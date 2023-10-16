@@ -9,6 +9,7 @@ const {
   getAllNotesController,
   getRecommendNoteController,
   addRecommendNoteController,
+  removeRecommendNoteController
 } = require("../../controller/note");
 
 router.prefix("/api/note");
@@ -29,7 +30,7 @@ router.post("/addRecommend", async (ctx, next) => {
 router.post("/removeRecommend", async (ctx, next) => {
   const { adminId, noteId } = ctx.request.body;
   console.log(ctx.request.body);
-  ctx.body = await addRecommendNoteController({ adminId, noteId });
+  ctx.body = await removeRecommendNoteController({ adminId, noteId });
 });
 
 //查询所有笔记

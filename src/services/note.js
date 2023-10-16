@@ -180,23 +180,59 @@ async function getNoteDetail({ noteId }) {
 
 //添加推荐笔记
 async function addRecommendNote({ adminId, noteId }) {
-  const result = await recommendNote.create({
-    adminId: adminId,
-    noteId: noteId,
-    isRecommend: true,
+  const existingRecommendNote = await recommendNote.findOne({
+    where: {
+      noteId,
+    }
   });
-  return result.dataValues;
+  if (existingRecommendNote) {
+    //更改推荐状态
+    const updatedRecommendNote = await existingRecommendNote.update(
+      {
+        adminId,
+        isRecommend: true // 这里默认设置为 true，您也可以根据需要更改
+      },
+      {
+        where: {
+          noteId
+        }
+      }
+    )
+    return updatedRecommendNote;
+  } else {
+    // 执行插入操作
+    const newRecommendNote = await recommendNote.create({
+      adminId,
+      noteId,
+      isRecommend: true // 这里默认设置为 true，您也可以根据需要更改
+    });
+    return newRecommendNote;
+  }
 }
 
 //移除推荐笔记
 async function removeRecommendNote({ adminId, noteId }) {
-  const result = await recommendNote.destroy({
+  const recommendNoteToDelete = await recommendNote.findOne({
     where: {
-      adminId: adminId,
-      noteId: noteId,
-    },
+      noteId
+    }
   });
-  return result.dataValues;
+  if (recommendNoteToDelete) {
+    await recommendNoteToDelete.update(
+      {
+        adminId,
+        isRecommend: false // 这里默认设置为 false，您也可以根据需要更改
+      },
+      {
+        where: {
+          noteId
+        }
+      }
+    )
+    return '推荐笔记已删除';
+  } else {
+    return '找不到要删除的推荐笔记';
+  }
 }
 
 module.exports = {
