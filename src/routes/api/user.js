@@ -3,7 +3,7 @@
  */
 
 const router = require("koa-router")();
-const { isExist, register, login, changeInfo, getPeronalInfo } = require("../../controller/user");
+const { isExist, register, login, changeInfo, getPeronalInfo, logoutController } = require("../../controller/user");
 const userValidate = require("../../validator/user");
 const { genValidator } = require("../../middlewares/validator");
 router.prefix("/api/user");
@@ -75,8 +75,8 @@ router.get('/getPersonal', async (ctx, next) => {
 //修改个人信息
 // const userId = 1;
 router.patch("/changeInfo", genValidator(userValidate), async (ctx, next) => {
-  const {userId, userName, nickName,gender, email, phoneNum, userIntro, picture } = ctx.request.body;
-  console.log('apiinfo'+userId)
+  const { userId, userName, nickName, gender, email, phoneNum, userIntro, picture } = ctx.request.body;
+  console.log('apiinfo' + userId)
   console.log('Received userId:', userId);
   ctx.body = await changeInfo(ctx,
     {
@@ -89,15 +89,15 @@ router.patch("/changeInfo", genValidator(userValidate), async (ctx, next) => {
       userIntro,
       picture,
     });
-   console.log('apis',)
+  console.log('apis',)
 })
 
 // 检查登录状态的路由
 router.get('/check', async (ctx) => {
   if (ctx.session.user) {
-      ctx.body = { message: '已登录', user: ctx.session.user };
+    ctx.body = { message: '已登录', user: ctx.session.user };
   } else {
-      ctx.body = { message: '未登录' };
+    ctx.body = { message: '未登录' };
   }
 });
 
