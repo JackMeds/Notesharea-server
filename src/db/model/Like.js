@@ -9,11 +9,13 @@ const Like = seq.define('like', {
     userId: {
         type: INTEGER,
         allowNull: false,
+        unique: true,
         comment: '用户 ID'
     },
     noteId: {
         type: INTEGER,
         allowNull: false,
+        unique: true,
         comment: '笔记 ID'
     },
     isLike: {
