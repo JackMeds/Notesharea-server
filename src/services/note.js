@@ -235,6 +235,212 @@ async function removeRecommendNote({ adminId, noteId }) {
   }
 }
 
+//点赞状态和数量查询
+async function getLikeStatus({ userId, noteId }) {
+  const existingLike = await Like.findOne({
+    where: {
+      userId,
+      noteId,
+    },
+  });
+  if (existingLike) {
+    //查询点赞数量
+    const likeCount = await Like.count({
+      where: {
+        noteId,
+        isLike: true,
+      },
+    });
+    //查询点赞状态
+    const isLike = await Like.findOne({
+      attributes: ["isLike"],
+      where: {
+        userId,
+        noteId,
+      },
+    });
+    return {
+      likeCount: likeCount,
+      isLike: isLike.isLike
+    };
+  } else {
+    //查询点赞数量
+    const likeCount = await Like.count({
+      where: {
+        noteId,
+        isLike: true,
+      },
+    });
+    return {
+      likeCount: likeCount,
+      isLike: false
+    };
+  }
+}
+
+//点赞笔记
+async function likeNote({ userId, noteId }) {
+  const existingLike = await Like.findOne({
+    where: {
+      userId,
+      noteId,
+    },
+  });
+  if (existingLike) {
+    //更改点赞状态
+    const updatedLike = await existingLike.update(
+      {
+        isLike: true, // 这里默认设置为 true，您也可以根据需要更改
+      },
+      {
+        where: {
+          userId,
+          noteId,
+        },
+      }
+    );
+    //查询点赞数量
+    const likeCount = await Like.count({
+      where: {
+        noteId,
+        isLike: true,
+      },
+    });
+    //更新点赞数量
+    await Note.update(
+      {
+        likeCount,
+      },
+      {
+        where: {
+          id: noteId,
+        },
+      }
+    );
+    return {
+      updatedLike : updatedLike,
+      likeCount: likeCount,
+      isLike: true
+    };
+  } else {
+    // 执行插入操作
+    const newLike = await Like.create({
+      userId,
+      noteId,
+      isLike: true, // 这里默认设置为 true，您也可以根据需要更改
+    });
+    //查询点赞数量
+    const likeCount = await Like.count({
+      where: {
+        noteId,
+        isLike: true,
+      },
+    });
+    //更新点赞数量
+    await Note.update(
+      {
+        likeCount,
+      },
+      {
+        where: {
+          id: noteId,
+        },
+      }
+    );
+    return {
+      newLike: newLike,
+      likeCount: likeCount,
+      isLike: true
+    };
+  }
+}
+//取消点赞笔记
+async function unlikeNote({ userId, noteId }) {
+  const existingLike = await Like.findOne({
+    where: {
+      userId,
+      noteId,
+    },
+  });
+  if (existingLike) {
+    //更改点赞状态
+    const updatedLike = await existingLike.update(
+      {
+        isLike: false, // 这里默认设置为 false，您也可以根据需要更改
+      },
+      {
+        where: {
+          userId,
+          noteId,
+        },
+      }
+    );
+    //查询点赞数量
+    const likeCount = await Like.count({
+      where: {
+        noteId,
+        isLike: true,
+      },
+    });
+    //更新点赞数量
+    await Note.update(
+      {
+        likeCount,
+      },
+      {
+        where: {
+          id: noteId,
+        },
+      }
+    );
+    return {
+      updatedLike : updatedLike,
+      likeCount: likeCount,
+      isLike: false
+    };
+  } else {
+    // 执行插入操作
+    const newLike = await Like.create({
+      userId,
+      noteId,
+      isLike: false, // 这里默认设置为 false，您也可以根据需要更改
+    });
+    //查询点赞数量
+    const likeCount = await Like.count({
+      where: {
+        noteId,
+        isLike: true,
+      },
+    });
+    //更新点赞数量
+    await Note.update(
+      {
+        likeCount,
+      },
+      {
+        where: {
+          id: noteId,
+        },
+      }
+    );
+    return {
+      newLike: newLike,
+      likeCount: likeCount,
+      isLike: false
+    };
+  }
+}
+
+//获取评论计数
+async function getCommentCount({ noteId }) {
+  const commentCount = await Comment.count({
+    where: {
+      noteId,
+    },
+  });
+  return commentCount;
+}
+
 module.exports = {
   createNote,
   getNoteDetail,
@@ -242,4 +448,8 @@ module.exports = {
   getRecommendNote,
   addRecommendNote,
   removeRecommendNote,
+  likeNote,
+  unlikeNote,
+  getLikeStatus,
+  getCommentCount,
 };
