@@ -2,7 +2,7 @@
  * @description user controller
  */
 
-const { getUserInfo, createUser } = require('../services/user');
+const { getUserInfo, createUser, getAllUsers  } = require('../services/user');
 const { SuccessModel, ErrorModel } = require('../model/ResModel');
 const { registerUserNameNotExistInfo, registerUserNameExistInfo, registerFailInfo, loginFailInfo } = require('../model/ErrorInfo');
 const doCrypto = require('../utils/cryp');
@@ -96,9 +96,16 @@ async function logoutController(ctx) {
     return new SuccessModel();
 }
 
+//查询所有用户
+async function getAllUsersController() {
+    const result = await getAllUsers();
+    return result;
+}
+
 module.exports = {
     isExist,
     register,
     login,
     logoutController,
+    getAllUsersController,
 }
