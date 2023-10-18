@@ -2,7 +2,7 @@
  * @description user controller
  */
 
-const { getUserInfo, createUser, updateUser, getPeronaldataInfo } = require('../services/user');
+const { getUserInfo, createUser, getAllUsers, updateUser, getPeronaldataInfo } = require('../services/user');
 const { SuccessModel, ErrorModel } = require('../model/ResModel');
 const { registerUserNameNotExistInfo, registerUserNameExistInfo, registerFailInfo, loginFailInfo } = require('../model/ErrorInfo');
 const doCrypto = require('../utils/cryp');
@@ -102,6 +102,12 @@ async function logoutController(ctx) {
     return new SuccessModel();
 }
 
+//查询所有用户
+async function getAllUsersController() {
+    const result = await getAllUsers();
+    return result;
+}
+
 // 获取个人信息数据
 async function getPeronalInfo(ctx) {
     const userId = ctx.query.userId;
@@ -174,14 +180,12 @@ async function changeInfo(ctx, { userId, nickName, gender, email, phoneNum, user
     }
 }
 
-
-
-
 module.exports = {
     isExist,
     register,
     login,
     changeInfo,
     getPeronalInfo,
+    getAllUsersController,
     logoutController
 }

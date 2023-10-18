@@ -84,6 +84,15 @@ async function createUser({
     return result.dataValues;
 }
 
+//查询用户列表
+async function getAllUsers() {
+    const result = await User.findAll({
+        attributes: ["id", "userName", "nickName", "gender", "email"],
+    });
+    // console.log(result.dataValues);
+    return result.map((item) => item.dataValues);
+}
+
 //获取个人数据
 async function getPeronaldataInfo(userId) {
     console.log('service', userId)
@@ -180,5 +189,6 @@ module.exports = {
     getUserInfo,
     createUser,
     updateUser,
+    getAllUsers,
     getPeronaldataInfo,
 };

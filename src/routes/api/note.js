@@ -31,7 +31,7 @@ router.post("/addRecommend", async (ctx, next) => {
 });
 
 //移除推荐笔记
-router.post("/removeRecommend", async (ctx, next) => {
+router.patch("/removeRecommend", async (ctx, next) => {
   const { adminId, noteId } = ctx.request.body;
   console.log(ctx.request.body);
   ctx.body = await removeRecommendNoteController({ adminId, noteId });
