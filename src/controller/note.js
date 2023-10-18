@@ -16,6 +16,9 @@ const { createNote,
   collectNote,
   uncollectNote,
   getCollectNoteList
+  getUserNoteList,
+  updateNote,
+  deleteNote
 } = require("../services/note");
 const { SuccessModel, ErrorModel } = require("../model/ResModel");
 const { createNoteFailInfo } = require("../model/ErrorInfo");
@@ -217,6 +220,49 @@ async function getCommentCountController({ noteId }) {
   }
 }
 
+//获取用户笔记列表
+async function getUserNoteListController({ userId }) {
+  try {
+    const result = await getUserNoteList({
+      userId,
+    });
+    return new SuccessModel(result);
+  } catch (ex) {
+    console.error(ex.message, ex.stack);
+    return new ErrorModel(createNoteFailInfo);
+  }
+}
+
+//修改笔记
+async function updateNoteController({ noteId, noteTitle, noteContent, img, downloadLink }) {
+  try {
+    await updateNote({
+      noteId,
+      noteTitle,
+      noteContent,
+      img,
+      downloadLink,
+    });
+    return new SuccessModel();
+  } catch (ex) {
+    console.error(ex.message, ex.stack);
+    return new ErrorModel(createNoteFailInfo);
+  }
+}
+
+//删除用户笔记
+async function deleteNoteController({ noteId }) {
+  try {
+    await deleteNote({
+      noteId,
+    });
+    return new SuccessModel();
+  } catch (ex) {
+    console.error(ex.message, ex.stack);
+    return new ErrorModel(createNoteFailInfo);
+  }
+}
+
 module.exports = {
   createNoteController,
   getAllNotesController,
@@ -232,4 +278,7 @@ module.exports = {
   collectNoteController,
   uncollectNoteController,
   getCollectNoteListController
+  getUserNoteListController,
+  updateNoteController,
+  deleteNoteController,
 };
