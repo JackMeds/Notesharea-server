@@ -15,7 +15,7 @@ const { createNote,
   getCollectStatus,
   collectNote,
   uncollectNote,
-  getCollectNoteList
+  getCollectNoteList,
   getUserNoteList,
   updateNote,
   deleteNote
@@ -277,7 +277,7 @@ module.exports = {
   getCollectStatusController,
   collectNoteController,
   uncollectNoteController,
-  getCollectNoteListController
+  getCollectNoteListController,
   getUserNoteListController,
   updateNoteController,
   deleteNoteController,
