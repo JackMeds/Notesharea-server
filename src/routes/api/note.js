@@ -9,7 +9,11 @@ const {
   getAllNotesController,
   getRecommendNoteController,
   addRecommendNoteController,
-  removeRecommendNoteController
+  removeRecommendNoteController,
+  getLikeStatusController,
+  likeNoteController,
+  unlikeNoteController,
+  getCommentCountController,
 } = require("../../controller/note");
 
 router.prefix("/api/note");
@@ -17,7 +21,7 @@ router.prefix("/api/note");
 //查询推荐笔记列表
 router.get("/recommendList", async (ctx, next) => {
   ctx.body = await getRecommendNoteController();
-});     
+});
 
 //添加推荐笔记
 router.post("/addRecommend", async (ctx, next) => {
@@ -63,6 +67,36 @@ router.post("/create", async (ctx, next) => {
     downloadLink,
   });
 });
+
+//点赞状态查询
+router.get("/getLikeStatus", async (ctx, next) => {
+  const { userId, noteId } = ctx.query;
+  console.log(ctx.query);
+  ctx.body = await getLikeStatusController({ userId, noteId });
+});
+
+//点赞笔记
+router.post("/like", async (ctx, next) => {
+  const { userId, noteId } = ctx.request.body;
+  console.log(ctx.request.body);
+  ctx.body = await likeNoteController({ userId, noteId });
+});
+
+//取消点赞笔记
+router.post("/unlike", async (ctx, next) => {
+  const { userId, noteId } = ctx.request.body;
+  console.log(ctx.request.body);
+  ctx.body = await unlikeNoteController({ userId, noteId });
+});
+
+//获取评论计数getCommentCount
+router.get("/getCommentCount", async (ctx, next) => {
+  const { noteId } = ctx.query;
+  console.log(ctx.query);
+  ctx.body = await getCommentCountController({ noteId });
+}
+);
+
 //TODO:修改笔记
 
 //TODO:删除笔记
