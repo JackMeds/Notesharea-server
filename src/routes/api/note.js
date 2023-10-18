@@ -14,6 +14,10 @@ const {
   likeNoteController,
   unlikeNoteController,
   getCommentCountController,
+  getCollectStatusController,
+  collectNoteController,
+  uncollectNoteController,
+  getCollectNoteListController,
   getUserNoteListController,
   updateNoteController,
   deleteNoteController,
@@ -99,6 +103,34 @@ router.get("/getCommentCount", async (ctx, next) => {
   ctx.body = await getCommentCountController({ noteId });
 }
 );
+
+//收藏状态查询
+router.get("/getCollectStatus", async (ctx, next) => {
+     const { userId, noteId } = ctx.query;
+      console.log(ctx.query);
+      ctx.body = await getCollectStatusController({ userId, noteId });
+})
+
+//收藏笔记
+router.post("/collect", async (ctx, next) => {
+  const { userId, noteId } = ctx.request.body;
+  console.log(ctx.request.body);
+  ctx.body = await collectNoteController({ userId, noteId });
+});
+
+//取消收藏笔记
+router.post("/uncollect", async (ctx, next) => {
+  const { userId, noteId } = ctx.request.body;
+  console.log(ctx.request.body);
+  ctx.body = await uncollectNoteController({ userId, noteId });
+});
+
+//获取用户收藏笔记的列表，包括笔记图片，笔记标题，笔记作者
+router.get("/getCollectNoteList", async (ctx, next) => {
+  const { userId } = ctx.query;
+  console.log(ctx.query);
+  ctx.body = await getCollectNoteListController({ userId });
+})
 
 //获取用户笔记列表
 router.get("/getUserNoteList", async (ctx, next) => {
