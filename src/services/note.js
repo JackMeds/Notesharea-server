@@ -452,6 +452,86 @@ async function getCommentCount({ noteId }) {
   return commentCount;
 }
 
+//查询当前用户全部笔记
+async function getUserNoteList({ userId }) {
+  const result = await Note.findAll({
+    where: {
+      userId,
+    },
+    include: [
+      {
+        model: User,
+        attributes: ["userName", "nickName", "picture"],
+      },
+      {
+        model: Collect,
+        attributes: ["userId", "noteId"],
+      },
+      {
+        model: Comment,
+        attributes: ["id", "userId", "noteId", "content", "createdAt"],
+        include: [
+          {
+            model: User,
+            attributes: ["userName", "nickName", "picture"],
+          },
+          {
+            model: Reply,
+            attributes: ["id", "userId", "commentId", "content", "createdAt"],
+            include: [
+              {
+                model: User,
+                attributes: ["userName", "nickName", "picture"],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        model: Like,
+        attributes: ["userId", "noteId"],
+      },
+    ],
+  });
+  return result.map((item) => item.dataValues);
+}
+
+//修改用户笔记
+async function updateNote({
+  noteId,
+  noteTitle,
+  noteContent,
+  img,
+  downloadLink,
+}) {
+  const result = await Note.update(
+    {
+      title: noteTitle,
+      content: noteContent,
+      img: img,
+      downloadLink: downloadLink,
+    },
+    {
+      where: {
+        id: noteId,
+      },
+    }
+  );
+  return result[0] > 0;
+}
+
+//删除用户笔记
+async function deleteNote({
+  noteId,
+}) {
+  const result = await Note.destroy({
+    where: {
+      id: noteId,
+    },
+  });
+  return result[0] > 0;
+}
+
 module.exports = {
   createNote,
   getNoteDetail,
@@ -463,4 +543,7 @@ module.exports = {
   unlikeNote,
   getLikeStatus,
   getCommentCount,
+  getUserNoteList,
+  updateNote,
+  deleteNote
 };

@@ -14,6 +14,9 @@ const {
   likeNoteController,
   unlikeNoteController,
   getCommentCountController,
+  getUserNoteListController,
+  updateNoteController,
+  deleteNoteController,
 } = require("../../controller/note");
 
 router.prefix("/api/note");
@@ -97,10 +100,33 @@ router.get("/getCommentCount", async (ctx, next) => {
 }
 );
 
-//TODO:修改笔记
+//获取用户笔记列表
+router.get("/getUserNoteList", async (ctx, next) => {
+  const { userId } = ctx.query;
+  console.log(ctx.query);
+  ctx.body = await getUserNoteListController({ userId });
+}
+);
 
-//TODO:删除笔记
+//修改笔记
+router.post("/update", async (ctx, next) => {
+  const { noteId, noteTitle, noteContent, img, downloadLink } =
+    ctx.request.body;
+  console.log(ctx.request.body);
+  ctx.body = await updateNoteController({
+    noteId,
+    noteTitle,
+    noteContent,
+    img,
+    downloadLink,
+  });
+});
 
-//TODO:笔记是否存在
+//删除用户笔记
+router.post("/deleteUserNote", async (ctx, next) => {
+  const { noteId } = ctx.request.body;
+  console.log(ctx.request.body);
+  ctx.body = await deleteNoteController({ noteId });
+});
 
 module.exports = router;
