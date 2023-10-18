@@ -769,7 +769,7 @@ module.exports = {
   getCollectStatus,
   collectNote,
   uncollectNote,
-  getCollectNoteList
+  getCollectNoteList,
   getUserNoteList,
   updateNote,
   deleteNote
