@@ -15,10 +15,11 @@ const {SESSION_SECRET_KEY} = require('./conf/secretKeys')
 
 // 配置 CORS 中间件
 app.use(cors({
-  origin: 'http://localhost:5173', // 允许任何来源的跨域请求，实际部署时建议设置为具体的域名
+  origin: '*', // 允许任何来源的跨域请求，实际部署时建议设置为具体的域名
   credentials: true, // 允许携带凭证信息（如 Cookies）
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // 允许的 HTTP 请求方法
   allowHeaders: ['Content-Type', 'Authorization'], // 允许的请求头
+  credentials: true // 允许携带cookie
 }));
 
 const index = require('./routes/index')
