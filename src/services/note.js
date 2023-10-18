@@ -175,6 +175,17 @@ async function getNoteDetail({ noteId }) {
   if (result == null) {
     return result;
   }
+  //增加浏览量
+  await Note.update(
+    {
+      viewCount: result.dataValues.viewCount + 1,
+    },
+    {
+      where: {
+        id: noteId,
+      },
+    }
+  );
   return result.dataValues;
 }
 
