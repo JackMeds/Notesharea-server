@@ -11,7 +11,11 @@ const { createNote,
   getLikeStatus,
   likeNote,
   unlikeNote,
-  getCommentCount
+  getCommentCount,
+  getCollectStatus,
+  collectNote,
+  uncollectNote,
+  getCollectNoteList
 } = require("../services/note");
 const { SuccessModel, ErrorModel } = require("../model/ResModel");
 const { createNoteFailInfo } = require("../model/ErrorInfo");
@@ -144,6 +148,62 @@ async function unlikeNoteController({ userId, noteId }) {
   }
 }
 
+//收藏状态查询
+async function getCollectStatusController({ userId, noteId }) {
+  try {
+    const result = await getCollectStatus({
+      userId,
+      noteId,
+    });
+    return new SuccessModel({ collectCount: result.collectCount, isCollect: result.isCollect });
+  } catch (ex) {
+    console.error(ex.message, ex.stack);
+    return new ErrorModel(createNoteFailInfo);
+  }
+}
+
+//收藏笔记
+async function collectNoteController({ userId, noteId }) {
+  try {
+    const result = await collectNote({
+      userId,
+      noteId,
+    });
+    return new SuccessModel({ collectCount: result.collectCount, isCollect: result.isCollect });
+  } catch (ex) {
+    console.error(ex.message, ex.stack);
+    return new ErrorModel(createNoteFailInfo);
+  }
+}
+
+//取消收藏笔记
+async function uncollectNoteController({ userId, noteId }) {
+  try {
+    const result = await uncollectNote({
+      userId,
+      noteId,
+    });
+    return new SuccessModel({ collectCount: result.collectCount, isCollect: result.isCollect });
+  } catch (ex) {
+    console.error(ex.message, ex.stack);
+    return new ErrorModel(createNoteFailInfo);
+  }
+}
+
+//获取用户收藏笔记的列表，包括笔记图片，笔记标题，笔记作者
+async function getCollectNoteListController({ userId }) {
+  try {
+    const result = await getCollectNoteList({
+      userId,
+    });
+    return new SuccessModel(result);
+  } catch (ex) {
+    console.error(ex.message, ex.stack);
+    return new ErrorModel(createNoteFailInfo);
+  }
+}
+
+
 //获取评论计数getCommentCount
 async function getCommentCountController({ noteId }) {
   try {
@@ -167,5 +227,9 @@ module.exports = {
   getLikeStatusController,
   likeNoteController,
   unlikeNoteController,
-  getCommentCountController
+  getCommentCountController,
+  getCollectStatusController,
+  collectNoteController,
+  uncollectNoteController,
+  getCollectNoteListController
 };

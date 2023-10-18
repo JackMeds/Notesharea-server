@@ -431,6 +431,206 @@ async function unlikeNote({ userId, noteId }) {
   }
 }
 
+//收藏状态和数量查询
+async function getCollectStatus({ userId, noteId }) {
+  const existingCollect = await Collect.findOne({
+    where: {
+      userId,
+      noteId,
+    },
+  });
+  if (existingCollect) {
+    //查询收藏数量
+    const collectCount = await Collect.count({
+      where: {
+        noteId,
+        isCollect: true,
+      },
+    });
+    //查询收藏状态
+    const isCollect = await Collect.findOne({
+      attributes: ["isCollect"],
+      where: {
+        userId,
+        noteId,
+      },
+    });
+    return {
+      collectCount: collectCount,
+      isCollect: isCollect.isCollect
+    };
+  } else {
+    //查询收藏数量
+    const collectCount = await Collect.count({
+      where: {
+        noteId,
+        isCollect: true,
+      },
+    });
+    return {
+      collectCount: collectCount,
+      isCollect: false
+    };
+  }
+}
+
+//收藏笔记
+async function collectNote({ userId, noteId }) {
+  const existingCollect = await Collect.findOne({
+    where: {
+      userId,
+      noteId,
+    },
+  });
+  if (existingCollect) {
+    //更改收藏状态
+    const updatedCollect = await existingCollect.update(
+      {
+        isCollect: true, // 这里默认设置为 true，您也可以根据需要更改
+      },
+      {
+        where: {
+          userId,
+          noteId,
+        },
+      }
+    );
+    //查询收藏数量
+    const collectCount = await Collect.count({
+      where: {
+        noteId,
+        isCollect: true,
+      },
+    });
+    //更新收藏数量
+    await Note.update(
+      {
+        collectCount,
+      },
+      {
+        where: {
+          id: noteId,
+        },
+      }
+    );
+    return {
+      updatedCollect : updatedCollect,
+      collectCount: collectCount,
+      isCollect: true
+    };
+  } else {
+    // 执行插入操作
+    const newCollect = await Collect.create({
+      userId,
+      noteId,
+      isCollect: true, // 这里默认设置为 true，您也可以根据需要更改
+    });
+    //查询收藏数量
+    const collectCount = await Collect.count({
+      where: {
+        noteId,
+        isCollect: true,
+      },
+    });
+    //更新收藏数量
+    await Note.update(
+      {
+        collectCount,
+      },
+      {
+        where: {
+          id: noteId,
+        },
+      }
+    );
+    return {
+      newCollect: newCollect,
+      collectCount: collectCount,
+      isCollect: true
+    };
+  }
+}
+
+//取消收藏笔记
+async function uncollectNote({ userId, noteId }) {
+  const existingCollect = await Collect.findOne({
+    where: {
+      userId,
+      noteId,
+    },
+  });
+  if (existingCollect) {
+    //更改收藏状态
+    const updatedCollect = await existingCollect.update(
+      {
+        isCollect: false, // 这里默认设置为 false，您也可以根据需要更改
+      },
+      {
+        where: {
+          userId,
+          noteId,
+        },
+      }
+    );
+    //查询收藏数量
+    const collectCount = await Collect.count({
+      where: {
+        noteId,
+        isCollect: true,
+      },
+    });
+    //更新收藏数量
+    await Note.update(
+      {
+        collectCount,
+      },
+      {
+        where: {
+          id: noteId,
+        },
+      }
+    );
+    return {
+      updatedCollect : updatedCollect,
+      collectCount: collectCount,
+      isCollect: false
+    };
+  } else {
+    // 执行插入操作
+    const newCollect = await Collect.create({
+      userId,
+      noteId,
+      isCollect: false, // 这里默认设置为 false，您也可以根据需要更改
+    });
+    //查询收藏数量
+    const collectCount = await Collect.count({
+      where: {
+        noteId,
+        isCollect: true,
+      },
+    });
+    //更新收藏数量
+    await Note.update(
+      {
+        collectCount,
+      },
+      {
+        where: {
+          id: noteId,
+        },
+      }
+    );
+    return {
+      newCollect: newCollect,
+      collectCount: collectCount,
+      isCollect: false
+    };
+  }
+}
+
+
+
+
 //获取评论计数
 async function getCommentCount({ noteId }) {
   const commentCount = await Comment.count({
@@ -440,6 +640,31 @@ async function getCommentCount({ noteId }) {
   });
   return commentCount;
 }
+
+//获取用户收藏笔记的列表，包括笔记图片，笔记标题，笔记作者
+async function getCollectNoteList({ userId }) {
+  const result = await Collect.findAll({
+    attributes: ["noteId"],
+    where: {
+      userId,
+      isCollect: true,
+    },
+    include: [
+      {
+        model: Note,
+        attributes: ["id", "title", "img", "createdAt"],
+        include: [
+          {
+            model: User,
+            attributes: ["userName", "nickName", "picture"],
+          },
+        ],
+      },
+    ],
+  });
+  return result.map((item) => item.dataValues);
+}
+
 
 module.exports = {
   createNote,
@@ -452,4 +677,8 @@ module.exports = {
   unlikeNote,
   getLikeStatus,
   getCommentCount,
+  getCollectStatus,
+  collectNote,
+  uncollectNote,
+  getCollectNoteList
 };
