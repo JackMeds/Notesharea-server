@@ -38,7 +38,7 @@ async function getRecommendNote() {
     include: [
       {
         model: Note,
-        attributes: ["id", "title", "content", "createdAt"],
+        attributes: ["id", "title", "content", "img", "createdAt"],
         include: [
           {
             model: User,
@@ -88,7 +88,7 @@ async function getRecommendNote() {
 //查询所有笔记
 async function getAllNotes() {
   const notes = await Note.findAll({
-    attributes: ["id", "title", "content", "createdAt"], // 选择你需要的笔记属性
+    attributes: ["id", "title", "content","img" , "createdAt"], // 选择你需要的笔记属性
     include: [
       {
         model: User,
