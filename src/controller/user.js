@@ -157,19 +157,20 @@ async function changeInfo(ctx, { userId, nickName, gender, email, phoneNum, user
         // 调用更新函数
         const result = await updateUser(updateData, userId);
         console.log('controlss', result);
-        if (result && result.code !== undefined) {
+        if (result) {
             // 执行成功
 
             Object.assign(ctx.session.userInfo, {
-                nickName,
-                gender,
-                email,
-                phoneNum,
-                userIntro,
-                picture,
+                "nickName": nickName,
+                "picture": picture,
+                "gender": gender,
+                "email": email,
+                "phoneNum": phoneNum,
+                "userIntro": userIntro,
             });
+            console.log(ctx.session.userInfo);
             // 返回成功模型
-            return new SuccessModel(message, 'success');
+            return new SuccessModel(ctx.session.userInfo);
         } else {
             // 失败
             return new ErrorModel({ errno: 10009, message: 'Change info failed' });
